@@ -1,0 +1,474 @@
+body, h1, ul, li, button {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+}
+
+header {
+    background-color: #007BFF;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+#create-button{
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chatbots h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.chatbots ul {
+    list-style: none;
+    padding: 0;
+}
+
+.chatbots li {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatbot-name {
+    font-weight: bold;
+}
+
+.chatbot-description {
+    color: #666;
+    margin-left: auto;
+}
+
+.edit-button, .delete-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.edit-button{
+    margin-right: 5px;
+    margin-left: auto;
+}
+
+.edit-button:hover, .delete-button:hover {
+    background-color: #0056b3;
+}
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+}
+
+nav li {
+    margin: 0 1rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 20px;
+}
+
+.left-template, .mid-template, .right-template {
+    flex: 1;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+    padding: 20px;
+}
+
+.question-input,.response-input{
+width: 45%;
+padding: 5px;
+border-radius: 5px;
+padding-left: 5px;
+
+}
+.sub-category-input{
+    padding: 5px;
+    border-radius: 3px;
+    margin: 3px;
+}
+
+/* Style icons */
+button#send-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+button#add-question-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+button#send-button:hover {
+    background-color: #0056b3;
+}
+
+/* Make chat history scrollable */
+.chat-history {
+    /* height: 350px; */
+    /* overflow-y: scroll; */
+    border: 1px solid #ddd;
+    padding: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.chat-history .message {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* Style the chatbot section */
+.chatbot {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the chat history */
+.chat-history {
+    /* max-height: 300px; */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    overflow-y: scroll;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.chat{
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    overflow-y: scroll;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    height: 350px;
+    width: auto;
+}
+.cat-gory{
+    /* overflow-y: auto; */
+    border: 1px solid #ccc;
+    /* padding: 1rem; */
+    padding: 10px;
+    /* overflow-y: scroll; */
+    /* border-radius: 5px; */
+    margin-top: 10px; 
+    height: auto;
+    width:auto;
+}
+
+/* Style user input */
+.user-input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#user-message {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#send-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+#send-button:hover {
+    background-color: #0056b3;
+}
+
+/* Style the training controls */
+.training-controls {
+    margin-top: 1rem;
+}
+
+.training-form {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.training-form h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+#training-question,
+#training-response {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#train-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+#save-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+#add-category-button ,#save-category-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.addsubcatbutton,#add-subcategories{
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin: 15px;
+}
+.removesubcategories{
+    padding: 2px;
+}
+
+#publish-button,#show-data-button{
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+}
+
+#train-button:hover {
+    background-color: #0056b3;
+}
+.chat-message.user-message {
+    background-color: #2196F3;
+    color: white;
+    margin-top: 3px;
+    margin-left: 30%;
+    float: right;
+    clear: both;
+}
+
+.chat-message.response-message{
+    background-color: #3dc553;
+    border-color: black;
+    border-width: 1px;
+    color:white;
+    margin-top: 3px;
+    margin-right: 30%;
+    float: left;
+    clear: both;
+}
+
+.chat-message {
+    background-color: #a3c3e4; 
+    padding: 5px 10px; 
+    border-radius: 10px;
+    margin: 10px 0; 
+}
+
+.predefined-question-button {
+    background-color: #010e1b; 
+    border: none;
+    color: white; 
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+.question-section {
+    border-radius: 10px;
+    border: 1px solid black;
+    overflow-y: scroll;
+    height: 100px;
+    bottom: 0;
+    width: 98%;
+    padding: 10px;
+    /* text-align: center; */
+}
+/* Define styles for training data */
+.training-data {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    max-height:fit-content;
+    height: 50px;
+}
+.qna{
+    width: 600px;
+    float: left;
+}
+.ed_del{
+    width: 100px;
+    float:right;
+}
+/* Style the question */
+.question {
+    font-weight: bold;
+    color: #191a1b; 
+}
+/* Style the response */
+.response {
+    margin-top: 5px;
+    color: #333; 
+}
+/* Style for the dropdown content */
+.dropdown-content {
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute; /* Set position to absolute */
+    bottom: calc(10%);
+}
+
+/* Style for individual dropdown items */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    
+    
+}
+ 
+/* Style for the active (highlighted) dropdown item */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.cat-gory button{
+    background-color: wheat;
+    border-width: 1px;
+    border-color: wheat;
+    color:black;
+    /* float: left; */
+   height: 30px;
+   border-radius: 5px;
+   margin: 5px;
+   
+}
+
+.star-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.star {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.star.selected {
+    color: gold; 
+}

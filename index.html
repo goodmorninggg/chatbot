@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot Framework</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="username">
+            {% if user_name %}
+            <p>Welcome, {{ user_name }}!</p>
+            {% endif %}
+            <h1>Chatbot Framework</h1>
+        </div>
+        <button id="create-button">Create Chatbot</button>
+        <button id="assign-button">Assign Chatbot</button>
+    </header>
+    <main>
+        <section class="chatbots">
+            <h2>Your Chatbots</h2>
+            <ul>
+                {% for bot_name in chatbots %}
+                <li>
+                    <span class="chatbot-name">{{ bot_name}}</span> 
+                    <button class="edit-button" data-chatbot="{{ bot_name }}" user="{{user_name}}"> Edit </button>
+                    <button class="delete-button" data-chatbot="{{ bot_name }}">Delete</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
