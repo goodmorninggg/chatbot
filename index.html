@@ -3,6 +3,134 @@
 <head>
     <title>Chatbot Framework</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* General button styling */
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Create Chatbot button */
+        #create-button {
+            background-color: #28a745; /* Green */
+            color: white;
+        }
+
+        /* Assign Chatbot button */
+        #assign-button {
+            background-color: #ffc107; /* Yellow */
+            color: black;
+        }
+
+        /* Logout button */
+        #logout-button {
+            background-color: #007bff; /* Blue */
+            color: white;
+        }
+
+        /* Hover effects for buttons */
+        #create-button:hover {
+            background-color: #218838; /* Darker green */
+        }
+
+        #assign-button:hover {
+            background-color: #e0a800; /* Darker yellow */
+        }
+
+        #logout-button:hover {
+            background-color: #0056b3; /* Darker blue */
+        }
+
+        /* Header styling */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .username {
+            display: flex;
+            align-items: center;
+        }
+
+        .username p {
+            margin: 0 10px 0 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333; /* Dark gray for better visibility */
+        }
+
+        .username h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #007bff; /* Blue to match the theme */
+        }
+
+        /* Main content styling */
+        main {
+            padding: 20px;
+        }
+
+        /* Chatbot list styling */
+        .chatbots h2 {
+            font-size: 22px;
+            color: #333; /* Dark gray for better visibility */
+            margin-bottom: 15px;
+        }
+
+        .chatbots ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .chatbots li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .chatbot-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333; /* Dark gray for better visibility */
+        }
+
+        .edit-button, .delete-button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .edit-button {
+            background-color: #17a2b8; /* Teal */
+            color: white;
+        }
+
+        .delete-button {
+            background-color: #dc3545; /* Red */
+            color: white;
+        }
+
+        .edit-button:hover {
+            background-color: #138496; /* Darker teal */
+        }
+
+        .delete-button:hover {
+            background-color: #c82333; /* Darker red */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -12,8 +140,11 @@
             {% endif %}
             <h1>Chatbot Framework</h1>
         </div>
-        <button id="create-button">Create Chatbot</button>
-        <button id="assign-button">Assign Chatbot</button>
+        <div>
+            <button id="create-button">Create Chatbot</button>
+            <button id="assign-button">Assign Chatbot</button>
+            <button id="logout-button">Logout</button>
+        </div>
     </header>
     <main>
         <section class="chatbots">
@@ -21,8 +152,8 @@
             <ul>
                 {% for bot_name in chatbots %}
                 <li>
-                    <span class="chatbot-name">{{ bot_name}}</span> 
-                    <button class="edit-button" data-chatbot="{{ bot_name }}" user="{{user_name}}"> Edit </button>
+                    <span class="chatbot-name">{{ bot_name }}</span> 
+                    <button class="edit-button" data-chatbot="{{ bot_name }}" user="{{ user_name }}">Edit</button>
                     <button class="delete-button" data-chatbot="{{ bot_name }}">Delete</button>
                 </li>
                 {% endfor %}
