@@ -11,13 +11,13 @@ app = Flask(__name__)
 CORS(app)
 
 conn = mysql.connector.connect(
-        host='172.22.81.122',
+        host='172.22.82.82',
         user='audit',
         password='Audit@123',
         database='hra'
         )
 conn2 = mysql.connector.connect(
-        host='172.22.81.122',
+        host='172.22.82.82',
         user='audit',
         password='Audit@123',
         database='hra'
@@ -42,14 +42,6 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        # # Check if the username and password are valid (you need to implement this)
-        # if is_valid_login(username, password):
-        #     session['username'] = username  
-        #     flash('Login successful', 'success')  
-        #     return redirect(url_for('index'))
-        # else:
-        #     flash('Login failed. Invalid credentials.', 'error') 
-
         cursor = conn.cursor()
         cursor.execute("SELECT username, role FROM users WHERE username = %s AND password = %s", (username, password))
         user = cursor.fetchone()
@@ -64,28 +56,25 @@ def login():
             conn.commit()
             cursor.close()
 
-            flash('Login successful', 'success')  
-            
             if session['role'] == 'admin':
+                # flash('Login successful', 'success')  # Flash success message for admin
                 return redirect(url_for('index'))  # Redirect admins to the dashboard
             else:
                 # Redirect users to their assigned chatbot
                 assigned_bots = get_user_chatbots(username)
                 
-                bot_name, user_name = assigned_bots[0]
-                logging.debug(f"Bot name: {bot_name}, User name: {user_name}")               
                 if assigned_bots:
-                    #return redirect(url_for('bot', chatbot_name=assigned_bots[0], username=username))
+                    bot_name, user_name = assigned_bots[0]
+                    logging.debug(f"Bot name: {bot_name}, User name: {user_name}")               
                     return redirect(url_for('bot', chatbot_name=bot_name, username=user_name))
                 else:
-                    flash("No chatbot assigned to you.", "error")
+                    flash("No chatbot assigned to you. Please contact the admin.", "error")
                     return redirect(url_for('logout'))  # Logout if no bot is assigned
         else:
             flash('Login failed. Invalid credentials.', 'error')
 
-    return render_template('login.html')
+    return render_template('login.html')# Implement a function to check if the login is valid
 
-# Implement a function to check if the login is valid
 def is_valid_login(username, password):
     cursor = conn.cursor()
     cursor.execute("SELECT username FROM users WHERE username = %s AND password = %s", (username, password))
