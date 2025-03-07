@@ -161,6 +161,44 @@
         </section>
     </main>
     
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Logout confirmation dialog
+        document.getElementById('logout-button').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default button behavior
+            const confirmLogout = confirm("Are you sure you want to logout?");
+            if (confirmLogout) {
+                // Redirect to the logout route if "Yes" is selected
+                window.location.href = "/logout";
+            }
+            // Do nothing if "No" is selected
+        });
+
+        // Add event listeners for other buttons (if needed)
+        document.getElementById('create-button').addEventListener('click', function () {
+            window.location.href = "/create_chatbot";
+        });
+
+        document.getElementById('assign-button').addEventListener('click', function () {
+            window.location.href = "/assign_bot";
+        });
+
+        // Add event listeners for edit and delete buttons
+        document.querySelectorAll('.edit-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const chatbotName = this.getAttribute('data-chatbot');
+                const userName = this.getAttribute('user');
+                window.location.href = `/edit_chatbot/${chatbotName}/${userName}`;
+            });
+        });
+
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const chatbotName = this.getAttribute('data-chatbot');
+                if (confirm(`Are you sure you want to delete ${chatbotName}?`)) {
+                    window.location.href = `/delete_chatbot/${chatbotName}`;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
