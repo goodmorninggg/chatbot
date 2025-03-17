@@ -3,53 +3,69 @@
 <head>
     <title>Chatbot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-   
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bot.css') }}">
 </head>
 <body>
     <script>
         const chatbotName = "{{ chatbot.name }}";
-        const user="{{username}}"
+        const user = "{{ username }}";
     </script>
 
-    <!--<textarea class="link" style="height: 150px; width: 650px; font-size: 25px;"  readonly>
-        <script src="http://172.22.0.36:8080/static/bot.js" chatbotName="{{ chatbot.name }}" user="{{username}}"> </script>
-    </textarea>-->
     <!-- Notification banner -->
     <div id="notification-banner"></div>
 
     <!-- Chatbot toggler -->
     <button id="toggle-chatbot"></button>
 
+    <!-- Registration Form Section -->
+    <div id="employee-form">
+        <!-- Welcome Message -->
+        <div id="welcome-message">
+            Welcome! How can I assist you today?
+        </div>
+
+        <!-- Registration Form -->
+        <form id="employee-id-form">
+            <input type="text" name="employee_id" placeholder="Enter Employee ID" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
     <!-- Chatbot container -->
     <div class="container-chat" id="draggable-chatbot">
+        <div class="bot-name">
+            <b>{{ chatbot.name }}</b>
+            <div class="bot-controls">
+                <button id="minimize-button" class="control-button">&#8211;</button>
+                <button id="close-button" class="control-button">&#10005;</button>
+            </div>
+        </div>
 
-            <div class="bot-name"><b>{{chatbot.name}}</b></div>
+        <!-- Category Content -->
+        <div class="category-content">
+            <button id="scroll-left-button" class="scroll-left-button">&#9664;</button>
+            <div class="cat-gory" id="cat-gory"></div>
+            <button id="scroll-right-button" class="scroll-right-button">&#9654;</button>
+        </div>
 
-            <!-- <div class="bot-name"><b>Samvad</b></div> -->
-            <div class="category-content">
-                <button id="scroll-left-button" class="scroll-left-button">&#9664;</button>
-                <div class="cat-gory" id="cat-gory">
-                </div>
-                <button id="scroll-right-button" class="scroll-right-button">&#9654;</button>
-            </div>
-            <div class="chat" id="chat" user="{{username}}" data-chatbot="{{ chatbot }}">
-            </div>
-            <div class="emoji-options" id="emoji-options">
-            </div>
-            <div class="user-input">
-                <input type="text" id="user-message" placeholder="Enter a question...">
-                <div class="dropdown-content" id="dropdown-content"></div>
-                <button id="send-button">Send</button>
-            </div>
-            </div>   
+        <!-- Chat Section -->
+        <div class="chat" id="chat" user="{{ username }}" data-chatbot="{{ chatbot }}"></div>
+
+        <!-- User Input Section -->
+        <div class="user-input">
+            <input type="text" id="user-message" placeholder="Enter a question...">
+            <div class="dropdown-content" id="dropdown-content"></div>
+            <button id="send-button">Send</button>
+        </div>
+    </div>
         <!-- </div> -->
     <script>
         // Chatbox DOM elements
         const chatbot = document.getElementById('draggable-chatbot');
         const toggleButton = document.getElementById('toggle-chatbot');
         const notificationBanner = document.getElementById('notification-banner');
+        const employeeForm = document.getElementById('employee-form');
+
 
         // Function to start pulsating animation
         function startPulsating() {
@@ -60,25 +76,130 @@
         function stopPulsating() {
             toggleButton.classList.remove('pulse');
         }
+      
+// Minimize button functionality
+const minimizeButton = document.getElementById('minimize-button');
+minimizeButton.addEventListener('click', () => {
+    const chatContainer = document.querySelector('.container-chat');
+    chatContainer.classList.toggle('minimized');
 
-        // Toggle chatbot visibility
-        toggleButton.addEventListener('click', () => {
-            // Toggle chatbot visibility
-            if (chatbot.style.display === 'none' || chatbot.style.display === '') {
-                chatbot.style.display = 'block';
-                stopPulsating(); // Stop pulsating when chatbot is opened
-            } else {
-                chatbot.style.display = 'none';
-                startPulsating(); // Start pulsating when chatbot is closed
-            }
+    // Show the toggle-chatbot button when minimized
+    const toggleButton = document.getElementById('toggle-chatbot');
+    if (chatContainer.classList.contains('minimized')) {
+        toggleButton.style.display = 'block'; // Show the toggle button
+    } else {
+        toggleButton.style.display = 'none'; // Hide the toggle button
+    }
+});
 
-            // Handle initial toggle actions
-            if (isFirstToggle) {
-                handleFirstToggle();
-                isFirstToggle = false; // Set the flag to false after the first toggle
-            }
-        });
+// Toggle chatbot functionality
+function toggleChatbot() {
+    const chatContainer = document.querySelector('.container-chat');
+    const toggleButton = document.getElementById('toggle-chatbot');
 
+    if (chatContainer.classList.contains('minimized')) {
+        // Restore the chatbot if it is minimized
+        chatContainer.classList.remove('minimized');
+        toggleButton.style.display = 'none'; // Hide the toggle button
+    } else if (chatbot.style.display === 'none' || chatbot.style.display === '') {
+        // Open the chatbot if it is closed
+        chatbot.style.display = 'block';
+        stopPulsating(); // Stop pulsating when chatbot is opened
+        employeeForm.style.display = 'none'; // Hide the form when chatbot is opened
+    } else {
+        // If chatbot is open, minimize it
+        chatContainer.classList.add('minimized');
+        toggleButton.style.display = 'block'; // Show the toggle button
+    }
+}
+
+// Toggle employee ID form visibility and minimize/restore functionality
+toggleButton.addEventListener('click', () => {
+    const chatContainer = document.querySelector('.container-chat');
+    const botName = document.querySelector('.bot-name');
+
+    if (chatContainer.classList.contains('minimized')) {
+        // Restore the chatbot if it is minimized
+        chatContainer.classList.remove('minimized');
+        toggleButton.style.display = 'none'; // Hide the toggle button
+    } else if (chatbot.style.display === 'block') {
+        // If chatbot is open, minimize it
+        chatContainer.classList.add('minimized');
+        toggleButton.style.display = 'block'; // Show the toggle button
+    } else if (employeeForm.style.display === 'none' || employeeForm.style.display === '') {
+        // If form is not open, show the form
+        employeeForm.style.display = 'block';
+        stopPulsating(); // Stop pulsating when the form is shown
+    } else {
+        // If form is open, hide the form
+        employeeForm.style.display = 'none';
+        startPulsating(); // Start pulsating when the form is hidden
+    }
+});
+const closeButton = document.getElementById('close-button');
+closeButton.addEventListener('click', () => {
+    const chatContainer = document.querySelector('.container-chat');
+    const toggleButton = document.getElementById('toggle-chatbot');
+    const chat = document.getElementById('chat');
+
+    // Close the chatbot
+    chatContainer.style.display = 'none';
+
+    // Clear the chat history
+    chat.innerHTML = '';
+
+    // Show the toggle-chatbot button and start pulsating
+    toggleButton.style.display = 'block';
+    startPulsating();
+
+    // Reset the state so that clicking the toggle button shows the employee form
+    toggleButton.addEventListener('click', () => {
+        if (chatContainer.style.display === 'none') {
+            employeeForm.style.display = 'block'; // Show the employee form
+            stopPulsating(); // Stop pulsating when the form is shown
+        }
+    });
+});
+
+        // Handle employee ID form submission
+        // Handle employee ID form submission
+const employeeIdForm = document.getElementById('employee-id-form');
+employeeIdForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const employeeId = document.querySelector('input[name="employee_id"]').value;
+
+    // Validate employee ID
+    if (!/^\d{5,6}$/.test(employeeId)) {
+        alert('Employee ID must be a 5 or 6 digit number.');
+        return; // Stop form submission if validation fails
+    }
+
+    // Send employee ID to the backend
+    fetch('/submit_employee_id', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `employee_id=${employeeId}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Hide the employee ID form
+            employeeForm.style.display = 'none';
+
+            // Show the chatbot interface
+            toggleChatbot();
+        } else {
+            alert('Error: ' + data.message); // Show error message
+        }
+    })
+    .catch(error => {
+        console.error('Error submitting employee ID:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
         // Initial pulsating when the page loads
         startPulsating();
 
@@ -110,81 +231,104 @@
         let isFirstToggle = true; // Flag to check if it's the first toggle
 
         // Function to append messages
-        function appendMessage(sender, message, isUserOption = false, messageClass = '') {
-            const chat = document.getElementById('chat');
-            const messageContainer = document.createElement('div');
-            // Add classes based on conditions
-            if (isUserOption) {
-                messageContainer.classList.add('user-option');
-            } else {
-                messageContainer.classList.add('message');
-            }
-            // Add additional class if provided
-            if (messageClass !== '') {
-                messageContainer.classList.add(messageClass);
-            }
-            // Set innerHTML content
-            messageContainer.innerHTML = `<span class="sender">${sender}</span> ${message}`;
+        function appendMessage(sender, message, isUserMessage) {
+    const chat = document.getElementById('chat');
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('chat-message');
 
-            // Append the message container to the chat
-            chat.appendChild(messageContainer);
+    // Add class for user or bot messages
+    if (isUserMessage) {
+        messageContainer.classList.add('user-message');
+    } else {
+        messageContainer.classList.add('response-message');
+    }
 
-            // Auto-scroll to the bottom
-            chat.scrollTop = chat.scrollHeight;
-        }
-            // Function to handle initial greeting and emoji selection
-        function handleFirstToggle() {
-            if (isFirstToggle) {
-                // Display initial greeting and emoji options
-                appendMessage('', 'Hello! How are you feeling today?', false, 'initial-greeting');
-                appendEmojiOptions();
-                isFirstToggle = false;
-            }
-        }
+    // Create icon container
+    const iconContainer = document.createElement('div');
+    iconContainer.classList.add('icon-container');
+
+    // Create icon
+    const icon = document.createElement('img');
+    icon.src = isUserMessage ? "{{ url_for('static', filename='user_icon.png') }}" : "{{ url_for('static', filename='bot_icon.png') }}";
+    icon.alt = isUserMessage ? "User Icon" : "Bot Icon";
+    icon.classList.add('chat-icon');
+    iconContainer.appendChild(icon);
+
+    // Create text container
+    const textContainer = document.createElement('div');
+    textContainer.classList.add('text-container');
+    textContainer.textContent = message;
+
+    // Append elements based on message type
+    if (isUserMessage) {
+        // For user messages: text on the left, icon on the right
+        messageContainer.appendChild(textContainer);
+        messageContainer.appendChild(iconContainer);
+    } else {
+        // For bot messages: icon on the left, text on the right
+        messageContainer.appendChild(iconContainer);
+        messageContainer.appendChild(textContainer);
+    }
+
+    // Append the message container to the chat
+    chat.appendChild(messageContainer);
+
+    // Auto-scroll to the bottom
+    chat.scrollTop = chat.scrollHeight;
+}
+        //     // Function to handle initial greeting and emoji selection
+        // function handleFirstToggle() {
+        //     if (isFirstToggle) {
+        //         // Display initial greeting and emoji options
+        //         appendMessage('', 'Hello! How are you feeling today?', false, 'initial-greeting');
+        //         appendEmojiOptions();
+        //         isFirstToggle = false;
+        //     }
+        // }
 
         // Trigger handleFirstToggle on page load
-        window.onload = function () {
-            handleFirstToggle();
-           // appendEmojiOptions();
-        };
+        // window.onload = function () {
+        //     handleFirstToggle();
+        //    // appendEmojiOptions();
+        // };
 
-        // Function to handle emoji selection
-        function handleEmojiSelection(emoji) {
-            // Handle user's emoji selection
-            if(emoji=='⏩'){
-                appendMessage('','', false);
-            }
-            else{
-                appendMessage('', emoji, false);
-            }
-            // Provide appropriate bot response based on the selected emoji
-            let botResponse;
-            switch (emoji) {
-                case '☹️':
-                    botResponse = 'I understand. Please let me know how I can help you.';
-                    break;
-                case '🙂':
-                    botResponse = 'I understand. Is there something that you would like me to help you with?';
-                    break;
-                case '😄':
-                    botResponse = 'That\'s great to hear!';
-                    break;
-                default:
-                    botResponse = 'How may I assist you today?';
-            }
+        // // Function to handle emoji selection
+        // function handleEmojiSelection(emoji) {
+        //     // Handle user's emoji selection
+        //     if(emoji=='⏩'){
+        //         appendMessage('','', false);
+        //     }
+        //     else{
+        //         appendMessage('', emoji, false);
+        //     }
+        //     // Provide appropriate bot response based on the selected emoji
+        //     let botResponse;
+        //     switch (emoji) {
+        //         case '☹️':
+        //             botResponse = 'I understand. Please let me know how I can help you.';
+        //             break;
+        //         case '🙂':
+        //             botResponse = 'I understand. Is there something that you would like me to help you with?';
+        //             break;
+        //         case '😄':
+        //             botResponse = 'That\'s great to hear!';
+        //             break;
+        //         default:
+        //             botResponse = 'How may I assist you today?';
+        //     }
             // Display bot's response
-            setTimeout(() => {
-                appendMessage('', botResponse, false, 'response-message');
-                //appendMessage('', 'What is your employee ID', false, 'initial-greeting');
-            }, 1000);
-            // Hide emoji options after user makes a selection
-            hideEmojiOptions();
-        }
-        // Function to hide emoji options
-        function hideEmojiOptions() {
-            const emojiOptions = document.querySelector('.emoji-options');
-            emojiOptions.style.display = 'none';
-        }
+        //     setTimeout(() => {
+        //         appendMessage('', botResponse, false, 'response-message');
+        //         //appendMessage('', 'What is your employee ID', false, 'initial-greeting');
+        //     }, 1000);
+        //     // Hide emoji options after user makes a selection
+        //     hideEmojiOptions();
+        // }
+        // // Function to hide emoji options
+        // function hideEmojiOptions() {
+        //     const emojiOptions = document.querySelector('.emoji-options');
+        //     emojiOptions.style.display = 'none';
+        // }
         // Function to disable emoji options
         // function disableEmojiOptions() {
         //     const emojiOptions = document.querySelectorAll('.emoji-options span');
@@ -193,20 +337,20 @@
         //     });
         // }
             // Function to append emojis as clickable options
-        function appendEmojiOptions() {
-            const emojis = ['😄', '🙂', '☹️','⏩'];
-            const emojiOptionsContainer = document.getElementById('emoji-options');
+        // function appendEmojiOptions() {
+        //     const emojis = ['😄', '🙂', '☹️','⏩'];
+        //     const emojiOptionsContainer = document.getElementById('emoji-options');
 
             // Check if emojis are already appended
-            if (emojiOptionsContainer.children.length === 0) {
-                emojis.forEach((emoji) => {
-                    const emojiSpan = document.createElement('span');
-                    emojiSpan.textContent = emoji; // Use textContent instead of innerHTML for plain text
-                    emojiSpan.addEventListener('click', () => handleEmojiSelection(emoji));
-                    emojiOptionsContainer.appendChild(emojiSpan);
-                });
-            }
-        }
+        //     if (emojiOptionsContainer.children.length === 0) {
+        //         emojis.forEach((emoji) => {
+        //             const emojiSpan = document.createElement('span');
+        //             emojiSpan.textContent = emoji; // Use textContent instead of innerHTML for plain text
+        //             emojiSpan.addEventListener('click', () => handleEmojiSelection(emoji));
+        //             emojiOptionsContainer.appendChild(emojiSpan);
+        //         });
+        //     }
+        // }
         function scrollChatHistoryToBottom() {
             const chat = document.getElementById('chat');
             chat.scrollTop = chat.scrollHeight;
@@ -221,6 +365,35 @@
         let trainingData = []; 
         let categories=[];
         let questionCount = 0;
+         // Function to send a message
+    function sendMessage() {
+        var userMessage = inputField.value.trim();
+        if (userMessage !== '') {
+            // Display the user message in the chat section
+            displayMessage(userMessage, true);
+
+            // Display a response from the bot
+            const botResponse = "Thank you! Please ask relevant information.";
+            displayMessage(botResponse, false);
+
+            // Scroll to the bottom of the chat history
+            scrollChatHistoryToBottom();
+
+            // Clear the input field and hide the dropdown
+            inputField.value = '';
+            dropdownContent.style.display = 'none';
+            sendButton.style.display = 'none'; // Hide the "Send" button after sending
+        }
+    }
+
+    // Event listener for the "Enter" key
+    inputField.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent the default form submission behavior
+            sendMessage(); // Call the function to send the message
+        }
+    });
+
         // iscreated=false;
         if(catGory){
             const username = chat.getAttribute('user');
@@ -237,7 +410,7 @@
                         iscreated=true;
                         categoryElement.addEventListener('click', function () {
                             chat.innerHTML = '';
-                            displayMessage("Welcome! How can I assist you today?", false);
+                            // displayMessage("Welcome! How can I assist you today?", false);
 
                             // Clear input field and dropdown content
                             inputField.value = '';
@@ -257,7 +430,7 @@
                             categoryElement.addEventListener('click', function () {
                                 // Clear chat section
                                 chat.innerHTML = '';
-                                displayMessage("Welcome! How can I assist you today?", false);
+                                // displayMessage("please choose your requied department", false);
 
                                 // Clear input field and dropdown content
                                 inputField.value = '';
@@ -273,18 +446,37 @@
                     });
         }
         function displayMessage(message, isUserMessage) {
-            const messageDiv = document.createElement('div');
-            messageDiv.textContent = message;
-            messageDiv.classList.add('chat-message');
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-message');
 
-            if (isUserMessage) {
-                messageDiv.classList.add('user-message');
-            } else {
-                messageDiv.classList.add('response-message');
-            }
-            chat.appendChild(messageDiv);
-            chat.scrollTop = chat.scrollHeight;
-        }
+    // Create an icon element
+    const icon = document.createElement('img');
+    icon.classList.add('chat-icon');
+
+    if (isUserMessage) {
+        // For user messages, add the user icon on the right
+        messageDiv.classList.add('user-message');
+        icon.src = "{{ url_for('static', filename='user_icon.png') }}";
+        icon.alt = "User Icon";
+        messageDiv.textContent = message; // Add message text
+        messageDiv.appendChild(icon); // Add user icon on the right
+    } else {
+        // For bot messages, add the bot icon on the left
+        messageDiv.classList.add('response-message');
+        icon.src = "{{ url_for('static', filename='bot_icon.png') }}";
+        icon.alt = "Bot Icon";
+        messageDiv.appendChild(icon); // Add bot icon on the left
+        const messageText = document.createElement('span');
+        messageText.textContent = message; // Add message text
+        messageDiv.appendChild(messageText); // Add message text after the icon
+    }
+
+    // Append the message container to the chat
+    chat.appendChild(messageDiv);
+
+    // Auto-scroll to the bottom
+    chat.scrollTop = chat.scrollHeight;
+}
         if (chat){
         // displayMessage("Welcome! How can I assist you today?", false);
             const username = chat.getAttribute('user');
@@ -438,6 +630,31 @@
                         dropdownContent.appendChild(optionElement);
                     });
                 }
+                inputField.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent the default action (form submission)
+        sendMessage(); // Call the function to send the message
+    }
+});
+function sendMessage() {
+    var userMessage = inputField.value.trim();
+    if (userMessage !== '') {
+        // Display the user message in the chat section
+        displayMessage(userMessage, true);
+
+        // Display a response from the bot
+        const botResponse = "Thank you! Please ask relevant information.";
+        displayMessage(botResponse, false);
+
+        // Scroll to the bottom of the chat history
+        scrollChatHistoryToBottom();
+
+        // Clear the input field and hide the dropdown
+        inputField.value = '';
+        dropdownContent.style.display = 'none';
+        sendButton.style.display = 'none'; // Hide the "Send" button after sending
+    }
+}
      // Event listener for input field keyup (to detect user input)
      inputField.addEventListener('keyup', function () {
         var inputValue = inputField.value.toLowerCase(); // Get the user input value
@@ -505,48 +722,94 @@
             sendButton.style.display = 'none'; // Hide the "Send" button after sending
         }
     });
+    sendButton.addEventListener('click', sendMessage);
+
     // Start by displaying the predefined questions at the bottom
     chat.addEventListener('DOMNodeInserted', incrementQuestionCount);
 }
-
-function displayQueWithSubcategory(subcategory,category){
-    const chat=document.getElementById('chat');
-    const quediv=document.createElement('div');
+function displayQueWithSubcategory(subcategory, category) {
+    const chat = document.getElementById('chat');
+    const quediv = document.createElement('div');
     quediv.classList.add('quediv');
     quediv.style.display = 'block';
-    table_name=username+chatbotName;
-    var qd=false;
+    quediv.dataset.subcategory = subcategory;
+
+    // Add bot icon at the top of the quediv
+    const botIcon = document.createElement('img');
+    botIcon.src = "{{ url_for('static', filename='bot_icon.png') }}";
+    botIcon.alt = "Bot Icon";
+    botIcon.classList.add('chat-icon');
+    quediv.appendChild(botIcon);
+
+    const table_name = username + chatbotName;
     fetch(`/fetch_questionsWithSubcategory/${table_name}/${category}/${subcategory}`)
-    .then(response=>response.json())
-    .then(data=>{
-        // if(data.length<5){
-            data.forEach(entry=>{
-            var que=entry.question;
-            var ans=entry.response;
-            var quebutton=document.createElement('button');
-            quebutton.classList.add('quebutton');
-            quebutton.textContent=que;
-            quediv.appendChild(quebutton);
-            qd=true;
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(entry => {
+                const que = entry.question;
+                const ans = entry.response;
 
-            quebutton.addEventListener('click',function(){
-                displayMessage(que,true);
-                displayMessage(ans,false)
-            })
-        })
-        if(qd){
+                // Add question button
+                const quebutton = document.createElement('button');
+                quebutton.classList.add('quebutton');
+                quebutton.textContent = que;
+                quediv.appendChild(quebutton);
+
+                quebutton.addEventListener('click', function () {
+                    appendMessage(user, que, true); // User message
+                    appendMessage(chatbotName, ans, false); // Bot response
+                });
+            });
+
             chat.appendChild(quediv);
-        }
-        // }
-        chat.scrollTop = chat.scrollHeight;
-    })
+            chat.scrollTop = chat.scrollHeight;
+        });
 }
+function appendMessage(sender, message, isUserMessage) {
+    const chat = document.getElementById('chat');
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message-container');
 
+    // Add class for user or bot messages
+    if (isUserMessage) {
+        messageContainer.classList.add('user-message-container');
+    } else {
+        messageContainer.classList.add('bot-message-container');
+    }
+
+    // Add icon
+    const icon = document.createElement('img');
+    icon.src = isUserMessage ? "{{ url_for('static', filename='user_icon.png') }}" : "{{ url_for('static', filename='bot_icon.png') }}";
+    icon.alt = isUserMessage ? "User Icon" : "Bot Icon";
+    icon.classList.add('chat-icon');
+
+    // Add message bubble
+    const messageBubble = document.createElement('div');
+    messageBubble.classList.add('message-bubble');
+    if (isUserMessage) {
+        messageBubble.classList.add('user-message');
+    } else {
+        messageBubble.classList.add('response-message');
+    }
+    messageBubble.textContent = message;
+
+    // Append icon and message bubble to container
+    if (isUserMessage) {
+        // For user messages, add the message bubble first, then the icon
+        messageContainer.appendChild(messageBubble);
+        messageContainer.appendChild(icon);
+    } else {
+        // For bot messages, add the icon first, then the message bubble
+        messageContainer.appendChild(icon);
+        messageContainer.appendChild(messageBubble);
+    }
+
+    chat.appendChild(messageContainer);
+    chat.scrollTop = chat.scrollHeight;
+}
 function displaysubcategory(category) {
-
-    chathistory = document.getElementById('chat');
+    const chathistory = document.getElementById('chat');
     const subcategorydiv = document.createElement('div');
-
     subcategorydiv.classList.add('SubCategoryDiv');
     subcategorydiv.style.display = 'block';
 
@@ -574,42 +837,58 @@ function displaysubcategory(category) {
             subcategorydiv.style.top = y + 'px';
         }
     });
+
     document.addEventListener('mouseup', function () {
         isDragging = false;
     });
-    table_name=username+chatbotName;
-fetch(`/fetch_subcategory/${table_name}/${category}`)
-    .then(response=>response.json())
-    .then(data=>{
-        const subcategories = data.flat();
-        let subcategoryElementCreated = false;
-            subcategories.forEach(subcategories=>{
-            if(subcategories!=''){
-                const subcategoryElement=document.createElement('button');
-                subcategoryElement.classList='subcategorybutton';
-                subcategoryElement.textContent=subcategories;
-                subcategorydiv.appendChild(subcategoryElement);
-                subcategoryElementCreated=true;
 
-                subcategoryElement.addEventListener('click',function(){
-                        //display as template if less than 5 question like suggestion and if more than that give it in typebox
-                        displayQueWithSubcategory(subcategories,category)
-                    });
+    const table_name = username + chatbotName;
+    fetch(`/fetch_subcategory/${table_name}/${category}`)
+        .then(response => response.json())
+        .then(data => {
+            const subcategories = data.flat();
+            let subcategoryElementCreated = false;
+
+            // Filter out null or empty subcategories
+            const validSubcategories = subcategories.filter(subcategory => subcategory && subcategory.trim() !== '');
+
+            validSubcategories.forEach(subcategory => {
+                const subcategoryElement = document.createElement('button');
+                subcategoryElement.classList.add('subcategorybutton');
+                subcategoryElement.textContent = subcategory;
+                subcategorydiv.appendChild(subcategoryElement);
+                subcategoryElementCreated = true;
+
+                // Add a data attribute to track the subcategory
+                subcategoryElement.dataset.subcategory = subcategory;
+
+                // Event listener for subcategory button click
+                subcategoryElement.addEventListener('click', function () {
+                    const subcategory = this.dataset.subcategory;
+
+                    // Clear the previous quediv (if it exists)
+                    const existingQuediv = document.querySelector(`.quediv[data-subcategory="${subcategory}"]`);
+                    if (existingQuediv) {
+                        existingQuediv.remove(); // Remove the existing quediv
+                    }
+
+                    // Display the questions again for this subcategory
+                    displayQueWithSubcategory(subcategory, category);
+                });
+            });
+
+            if (subcategoryElementCreated) {
+                const closesubcategorydiv = document.createElement('button');
+                closesubcategorydiv.textContent = 'X';
+                closesubcategorydiv.classList.add('closesubcategorydiv');
+                subcategorydiv.appendChild(closesubcategorydiv);
+                chathistory.appendChild(subcategorydiv);
+
+                closesubcategorydiv.addEventListener('click', function () {
+                    chathistory.removeChild(subcategorydiv);
+                });
             }
         });
-    if(subcategoryElementCreated){
-        const closesubcategorydiv=document.createElement('button');
-        //closesubcategorydiv.classList='closecategorydiv';
-        closesubcategorydiv.textContent='X';
-        closesubcategorydiv.classList='closesubcategorydiv';
-        subcategorydiv.appendChild(closesubcategorydiv);
-        chathistory.appendChild(subcategorydiv);
-
-        closesubcategorydiv.addEventListener('click',function(){
-        chathistory.removeChild(subcategorydiv);
-        });
-        }
-    });
 }
          //Start by displaying the predefined questions at the bottom
          displayQuestions('',false);
